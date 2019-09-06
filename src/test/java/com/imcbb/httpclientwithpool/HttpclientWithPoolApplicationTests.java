@@ -1,4 +1,4 @@
-package com.imcbb.httpclientwithpoo;
+package com.imcbb.httpclientwithpool;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
