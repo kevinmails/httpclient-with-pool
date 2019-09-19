@@ -12,13 +12,19 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
  */
 public class HttpClientUtil {
     PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-    CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(cm).build();
+    CloseableHttpClient httpClient;
+
+    private HttpClientUtil() {
+        cm.setDefaultMaxPerRoute(10);
+        cm.setMaxTotal(200);
+        httpClient = HttpClients.custom().setConnectionManager(cm).build();
+    }
 
     private static class SingletonClassInstance {
         private static final HttpClientUtil instance = new HttpClientUtil();
     }
 
-   public static CloseableHttpClient getHttpClient() {
+    public static CloseableHttpClient getHttpClient() {
 
         return SingletonClassInstance.instance.httpClient;
     }
