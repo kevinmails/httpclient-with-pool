@@ -1,11 +1,18 @@
 package com.imcbb.httpclientwithpool.service;
 
+import com.imcbb.httpclientwithpool.HttpClientUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,6 +59,29 @@ public class IndexService {
         }
 
         return "sendWithHttpClient";
+
+    }
+
+
+    @RequestMapping(path = "poolSend")
+    public String sendWithHttpClientPool() {
+
+        HttpClient client = HttpClientUtil.getHttpClient();
+
+        String url = "http://imcbb.com:8000";
+        HttpGet get = new HttpGet(url);
+
+        try {
+            HttpResponse response = client.execute(get, HttpClientContext.create());
+            HttpEntity entity = response.getEntity();
+
+            return EntityUtils.toString(entity);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return "sendWithHttpClientPool";
 
     }
 }
