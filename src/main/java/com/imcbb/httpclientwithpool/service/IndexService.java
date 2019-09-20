@@ -26,6 +26,13 @@ import java.io.IOException;
 @RestController
 public class IndexService {
 
+
+    @RequestMapping(path = "hello")
+    public String hello() {
+        return "hello";
+
+    }
+
     @RequestMapping(path = "send")
     public String sendWithHttpClient() {
 
