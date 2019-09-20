@@ -11,8 +11,6 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -74,7 +72,7 @@ public class IndexService {
         try {
             HttpResponse response = client.execute(get, HttpClientContext.create());
             HttpEntity entity = response.getEntity();
-
+            HttpClientUtils.closeQuietly(response);
             return EntityUtils.toString(entity);
         } catch (IOException e) {
             e.printStackTrace();
