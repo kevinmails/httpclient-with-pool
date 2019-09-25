@@ -1,6 +1,7 @@
 package com.imcbb.httpclientwithpool;
 
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -17,9 +18,15 @@ public class HttpClientUtil {
     private final CloseableHttpClient chc;
 
     private HttpClientUtil() {
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(1000)
+                .setConnectionRequestTimeout(1000)
+                .setSocketTimeout(1000).build();
+        System.out.println("cm: " + cm);
         cm.setDefaultMaxPerRoute(10);
         cm.setMaxTotal(200);
-        chc = HttpClients.custom().setConnectionManager(cm).build();
+        cm.setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(1000).build());
+        chc = HttpClients.custom().setConnectionManager(cm).setDefaultRequestConfig(requestConfig).build();
     }
 
     private static class SingletonClassInstance {
@@ -36,13 +43,19 @@ public class HttpClientUtil {
 
 
         for (; ; ) {
+            new Thread(() -> {
 
+                HttpClient client = HttpClientUtil.getHttpClient();
+                System.out.println(client);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-            HttpClient client = HttpClientUtil.getHttpClient();
-            System.out.println(client);
-
-            Thread.sleep(1000);
+            }).start();
         }
+
 
     }
 }
